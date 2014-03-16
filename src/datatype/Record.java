@@ -12,8 +12,7 @@ public class Record {
 	private int action;
 	private int date;
 
-	public Record(String recordString)
-	{
+	public Record(String recordString) {
 		String[] strings = recordString.split("\t");
 		userID = Integer.parseInt(strings[0]);
 		brandID = Integer.parseInt(strings[1]);
