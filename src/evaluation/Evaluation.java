@@ -54,8 +54,8 @@ public class Evaluation {
 		double precision = hitNum*100.0/brandsNumInPre;
 		double recall = hitNum*100.0/brandsNumInCri;
 		double fvalue = 2*precision*recall/(precision+recall);
-		System.out.println(String.format("Precision:	%.2f%%", precision));
-		System.out.println(String.format("Recall:		%.2f%%", recall));
-		System.out.println(String.format("F-value:		%.2f%%", fvalue));
+		System.out.println(String.format("Precision: %.2f%%", precision));
+		System.out.println(String.format("Recall:    %.2f%%", recall));
+		System.out.println(String.format("F-value:   %.2f%%", fvalue));
 	}
 }
