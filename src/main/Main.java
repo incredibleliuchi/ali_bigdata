@@ -14,11 +14,11 @@ import java.util.Map.Entry;
 
 import datatype.KnownData;
 import datatype.Record;
+import evaluation.Evaluation;
 
 public class Main {
-
-	public static void main(String[] args) {
-
+	
+	private static void cal() {
 		KnownData data = new KnownData();
 		
 		HashSet<Integer> probabBrand = new HashSet<>();
@@ -54,7 +54,7 @@ public class Main {
 			}
 		}
 		
-		ArrayList<Record> records = data.getRecordsAfterDate(106);
+		ArrayList<Record> records = data.getRecordsAfterDate(75);
 		HashMap<Integer, HashSet<Integer>> result = new HashMap<>();
 		
 		for (Record record : records) {
@@ -105,6 +105,12 @@ public class Main {
 			}
 		}
 		
+	}
+
+	public static void main(String[] args) {
+
+		Evaluation evaluation = new Evaluation("data/criterion.txt");
+		evaluation.evaluate("outFile.txt");
 
 	}
 

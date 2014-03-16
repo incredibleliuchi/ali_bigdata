@@ -11,6 +11,7 @@ import java.util.HashSet;
 public class KnownData {
 	
 	public static String DATA_PATH = "data/data.txt";
+	public static String TRAINSET_PATH = "data/trainset.txt";
 	
 	private ArrayList<Record> data;
 	private ArrayList<Integer> userIDList;
@@ -19,7 +20,7 @@ public class KnownData {
 	public KnownData()
 	{
 		data = new ArrayList<>();
-		File file = new File(DATA_PATH);
+		File file = new File(TRAINSET_PATH);
 		BufferedReader br = null;
 		
 		try {
