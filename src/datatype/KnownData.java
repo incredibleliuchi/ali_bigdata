@@ -51,6 +51,19 @@ public class KnownData {
 		return result;
 	}
 
+	public ArrayList<Record> getRecordsWithBrandID(int BrandID)
+	{
+		ArrayList<Record> result = new ArrayList<>();
+		
+		for (Record record : data) {
+			if (record.getBrandID() == BrandID) {
+				result.add(record);
+			}
+		}
+		
+		return result;
+	}
+
 	public ArrayList<Record> getRecordsBetweenDate(int startDate, int endDate)
 	{
 		ArrayList<Record> result = new ArrayList<>();

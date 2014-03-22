@@ -11,6 +11,15 @@ Record all the products that a person click/collect/add to shopping cart and the
 Check all the products that a person click/collect/add to shopping cart in the last month and put all the probably products among them into result set.
 
 Effectiveness: 3 month as known / 1 month as unknown
-Precision: 1.76%
-Recall:    12.64%
-F-value:   3.09%
+Precision: 1.52%
+Recall:    9.94%
+F-value:   2.64%
+
+
+
+2.Naive Method Two
+
+Effectiveness: 3 month as known / 1 month as unknown
+Precision: 4.42%
+Recall:    7.67%
+F-value:   5.61%

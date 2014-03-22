@@ -58,6 +58,10 @@ public class FileManager {
 				Entry<java.lang.Integer, java.util.HashSet<java.lang.Integer>> entry = (Entry<java.lang.Integer, java.util.HashSet<java.lang.Integer>>) iterator
 						.next();
 				
+				if (entry.getValue().size() == 0) {
+					continue;
+				}
+				
 				bw.write(entry.getKey().toString());
 				bw.write("\t");
 				
