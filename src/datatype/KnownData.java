@@ -1,12 +1,9 @@
 package datatype;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import tools.FileManager;
 
 public class KnownData {
 	
@@ -19,31 +16,7 @@ public class KnownData {
 	
 	public KnownData()
 	{
-		data = new ArrayList<>();
-		File file = new File(TRAINSET_PATH);
-		BufferedReader br = null;
-		
-		try {
-			br = new BufferedReader(new FileReader(file));
-			String nextLine = null;
-			
-			while ((nextLine = br.readLine())!=null) {
-				data.add(new Record(nextLine));
-			}
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		data = FileManager.readKnownData(DATA_PATH);
 		
 		HashSet<Integer> userIDHashSet = new HashSet<>();
 		HashSet<Integer> brandIDHashSet = new HashSet<>();
@@ -78,12 +51,12 @@ public class KnownData {
 		return result;
 	}
 
-	public ArrayList<Record> getRecordsAfterDate(int date)
+	public ArrayList<Record> getRecordsBetweenDate(int startDate, int endDate)
 	{
 		ArrayList<Record> result = new ArrayList<>();
 		
 		for (Record record : data) {
-			if (record.getDate() >= date) {
+			if (record.getDate() >= startDate && record.getDate() < endDate) {
 				result.add(record);
 			}
 		}

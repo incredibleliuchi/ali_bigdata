@@ -1,24 +1,19 @@
 package main;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
+import tools.FileManager;
 import datatype.KnownData;
 import datatype.Record;
 import evaluation.Evaluation;
 
 public class Main {
 	
-	private static void cal() {
+	private static void naiveOne() {
 		KnownData data = new KnownData();
 		
 		HashSet<Integer> probabBrand = new HashSet<>();
@@ -54,9 +49,8 @@ public class Main {
 			}
 		}
 		
-		ArrayList<Record> records = data.getRecordsAfterDate(75);
+		ArrayList<Record> records = data.getRecordsBetweenDate(76, 106);
 		HashMap<Integer, HashSet<Integer>> result = new HashMap<>();
-		
 		for (Record record : records) {
 			if (probabBrand.contains(record.getBrandID())) {
 				if (record.getAction() == Record.ACTION_COLLECT || record.getAction() == Record.ACTION_SHOPPINGCART || record.getAction() == Record.ACTION_CLICK) {
@@ -68,46 +62,13 @@ public class Main {
 			}
 		}
 		
-		File outFile = new File("outFile.txt");
-		BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(new FileWriter(outFile));
-			
-			Iterator<Entry<Integer, HashSet<Integer>>> iterator = result.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Entry<java.lang.Integer, java.util.HashSet<java.lang.Integer>> entry = (Entry<java.lang.Integer, java.util.HashSet<java.lang.Integer>>) iterator
-						.next();
-				
-				bw.write(entry.getKey().toString());
-				bw.write("\t");
-				
-				Iterator<Integer> brandIterator = entry.getValue().iterator();
-				while (brandIterator.hasNext()) {
-					Integer integer = (Integer) brandIterator.next();
-					bw.write(integer.toString());
-					if (brandIterator.hasNext()) {
-						bw.write(",");
-					}
-				}
-				
-				bw.write("\n");;
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (bw != null) {
-				try {
-					bw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		FileManager.outputResultFile(result, "outFile.txt");
 		
 	}
 
 	public static void main(String[] args) {
+		
+		naiveOne();
 
 		Evaluation evaluation = new Evaluation("data/criterion.txt");
 		evaluation.evaluate("outFile.txt");
