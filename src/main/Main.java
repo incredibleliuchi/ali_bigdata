@@ -18,7 +18,24 @@ import evaluation.Evaluation;
 
 public class Main {
 
-	private static void naiveOne() {
+	private static void giveAll() {
+		KnownData data = new KnownData();
+		
+		ArrayList<Record> records = data.getRecordsBetweenDate(0, 107);
+		HashSet<Integer> brandIDs = new HashSet<>();
+		for (Record record : records) {
+			brandIDs.add(record.getBrandID());
+		}
+		HashMap<Integer, HashSet<Integer>> result = new HashMap<>();
+		for (Record record : records) {
+			if (!result.containsKey(record.getUserID())) {
+				result.put(record.getUserID(), brandIDs);
+			}
+		}
+		FileManager.outputResultFile(result, "all.txt");
+	}
+	
+	private static void naiveOne(boolean isTest) {
 		KnownData data = new KnownData();
 
 		HashSet<Integer> probabBrand = new HashSet<>();
@@ -40,11 +57,11 @@ public class Main {
 			});
 
 			for (int i = 0; i < records.size(); i++) {
-				if (records.get(i).getDate() >= 106) {
+				if (isTest && records.get(i).getDate() > 106) {
 					continue;
 				}
 				for (int j = i+1; j < records.size(); j++) {
-					if (records.get(j).getDate() >= 106) {
+					if (isTest && records.get(j).getDate() > 106) {
 						continue;
 					}
 					if (records.get(i).getBrandID() != records.get(j).getBrandID()) {
@@ -60,7 +77,12 @@ public class Main {
 			}
 		}
 
-		ArrayList<Record> records = data.getRecordsBetweenDate(76, 106);
+		ArrayList<Record> records = null;
+		if (isTest) {
+			records = data.getRecordsBetweenDate(76, 107);
+		} else {
+			records = data.getRecordsBetweenDate(107, 138);
+		}
 		HashMap<Integer, HashSet<Integer>> result = new HashMap<>();
 		for (Record record : records) {
 			if (probabBrand.contains(record.getBrandID())) {
@@ -118,7 +140,7 @@ public class Main {
 		}
 	}
 
-	private static ArrayList<ActionTransferCount> calProductTransRadios(KnownData data) {
+	private static ArrayList<ActionTransferCount> calProductTransRadios(KnownData data, boolean isTest) {
 		ArrayList<Integer> productIDs = data.getBrandIDList();
 		HashMap<Integer, ActionTransferCount> productTransMap = new HashMap<>();
 		for (Integer productID : productIDs) {
@@ -131,6 +153,12 @@ public class Main {
 			});
 
 			for (int i = 0; i < records.size(); i++) {
+				
+				if (isTest) {
+					if (records.get(i).getDate() > 106) {
+						continue;
+					}
+				}
 
 				if (!productTransMap.containsKey(records.get(i).getBrandID())) {
 					productTransMap.put(records.get(i).getBrandID(), new ActionTransferCount(records.get(i).getBrandID()));
@@ -178,7 +206,7 @@ public class Main {
 		return productTransRadios;
 	}
 	
-	private static ArrayList<ActionTransferCount> calUserTransRadios(KnownData data) {
+	private static ArrayList<ActionTransferCount> calUserTransRadios(KnownData data, boolean isTest) {
 		ArrayList<Integer> userIDs = data.getUserIDList();
 		HashMap<Integer, ActionTransferCount> userTransMap = new HashMap<>();
 		for (Integer userID : userIDs) {
@@ -191,6 +219,12 @@ public class Main {
 			});
 
 			for (int i = 0; i < records.size(); i++) {
+				
+				if (isTest) {
+					if (records.get(i).getDate() > 106) {
+						continue;
+					}
+				}
 
 				if (!userTransMap.containsKey(records.get(i).getUserID())) {
 					userTransMap.put(records.get(i).getUserID(), new ActionTransferCount(records.get(i).getUserID()));
@@ -238,15 +272,15 @@ public class Main {
 		return userTransRadios;
 	}
 	
-	private static void naiveTwo() {
+	private static void naiveTwo(boolean isTest) {
 		KnownData data = new KnownData();
 		
-		ArrayList<ActionTransferCount> userTransRadios = calUserTransRadios(data);
+		ArrayList<ActionTransferCount> userTransRadios = calUserTransRadios(data, isTest);
 		HashMap<Integer, ActionTransferCount> userTransRadiosMap = new HashMap<>();
 		for (ActionTransferCount actionTransferCount : userTransRadios) {
 			userTransRadiosMap.put(actionTransferCount.getID(), actionTransferCount);
 		}
-		ArrayList<ActionTransferCount> productTransRadios = calProductTransRadios(data);
+		ArrayList<ActionTransferCount> productTransRadios = calProductTransRadios(data, isTest);
 		HashMap<Integer, ActionTransferCount> productTransRadiosMap = new HashMap<>();
 		for (ActionTransferCount actionTransferCount : productTransRadios) {
 			productTransRadiosMap.put(actionTransferCount.getID(), actionTransferCount);
@@ -254,7 +288,13 @@ public class Main {
 		
 		HashMap<Integer, HashMap<Integer, Double>> nextMonthBuyRadio = new HashMap<>();
 		
-		ArrayList<Record> records = data.getRecordsBetweenDate(106, 139);
+		ArrayList<Record> records = null;
+		if (isTest) {
+			records = data.getRecordsBetweenDate(76, 107);
+		} else {
+			records = data.getRecordsBetweenDate(107, 138);
+		}
+		
 		for (Record record : records) {
 			int productID = record.getBrandID();
 			int userID = record.getUserID();
@@ -304,7 +344,7 @@ public class Main {
 			while (innerIterator.hasNext()) {
 				Entry<java.lang.Integer, java.lang.Double> entry2 = (Entry<java.lang.Integer, java.lang.Double>) innerIterator
 						.next();
-				if (entry2.getValue() > 2.3) {
+				if (entry2.getValue() > 1.8) {
 					result.get(entry.getKey()).add(entry2.getKey());
 				}
 			}
@@ -316,14 +356,14 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		naiveTwo();
-
+		//naiveTwo(false);
+		giveAll();
 		//test();
 
 		//naiveOne();
 
-		//Evaluation evaluation = new Evaluation("data/criterion.txt");
-		//evaluation.evaluate("outFile2.txt");
+		Evaluation evaluation = new Evaluation("data/criterion.txt");
+		evaluation.evaluate("all.txt");
 
 	}
 
